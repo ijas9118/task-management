@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// docker compose exec auth-service npx prisma migrate dev --name create-auth-models
+
+model Users {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  isActive Boolean @default(true) @map("is_active")
+
+  roles         User_Roles[]
+  refreshTokens Refresh_Tokens[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Roles {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  users       User_Roles[]
+  permissions Role_Permissions[]
+
+  @@map("roles")
+}
+
+model Permissions {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  roles Role_Permissions[]
+
+  @@map("permissions")
+}
+
+model Role_Permissions {
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+
+  role       Roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model User_Roles {
+  userId String @map("user_id")
+  roleId String @map("role_id")
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Roles @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Refresh_Tokens {
+  token     String   @id
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  issuedAt  DateTime @map("issued_at")
+  revoked   Boolean  @default(false)
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_token")
+}
