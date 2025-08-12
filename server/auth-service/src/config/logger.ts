@@ -5,17 +5,17 @@ const logFormat = winston.format.printf(({ level, message, timestamp, stack }) =
 });
 
 const customColors = {
-  error: "brightRed",
-  warn: "brightYellow",
-  info: "brightGreen",
-  http: "brightCyan",
-  debug: "brightBlue",
+  error: "red",
+  warn: "yellow",
+  info: "cyan",
+  http: "green",
+  debug: "blue",
 };
 
 winston.addColors(customColors);
 
 const logger = winston.createLogger({
-  level: "info",
+  level: "debug",
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp({ format: "HH:mm:ss" }),

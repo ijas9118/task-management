@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use((req, _res, next) => {
-  logger.info(`${req.method} ${req.url}`);
+  logger.http(`${req.method} ${req.url}`);
   next();
 });
 
