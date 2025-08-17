@@ -1,0 +1,51 @@
+direction: right
+
+AG: API Gateway
+US: User Service
+AS: Auth Service {
+  near: top-center
+}
+TS: Task Service
+PS: Project Service
+NS: Notification Service
+
+Kafka: {
+  near: center-right
+  icon: https://icons.terrastruct.com/aws%2FApplication%20Integration%2FAmazon-Simple-Queue-Service-SQS.svg
+  height: 500
+}
+
+AG: {
+  icon: https://icons.terrastruct.com/aws%2FMobile%2FAmazon-API-Gateway.svg
+}
+
+Client: {
+  icon: https://icons.terrastruct.com/dev%2Freact.svg
+  shape: image
+}
+
+Client -> AG
+
+AG -> AS: login
+AG -> US
+AG -> TS
+AG -> PS
+AG -> NS
+
+AS -- US: create user
+
+US -> Kafka: {
+  style.animated: true
+}
+
+TS -> Kafka: {
+  style.animated: true
+}
+
+PS -> Kafka: {
+  style.animated: true
+}
+
+NS <-> Kafka: {
+  style.animated: true
+}

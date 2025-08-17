@@ -51,6 +51,6 @@ export default defineConfig([
   { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
   tseslint.configs.recommended,
   {
-    ignores: ["dist/**", "node_modules/**", "eslint.config.mjs"],
+    ignores: ["dist/**", "node_modules/**", "eslint.config.mjs", "src/proto/**"],
   },
 ]);
