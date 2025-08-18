@@ -25,13 +25,8 @@ export function userController(userService: IUserService): UserServiceHandlers {
           return;
         }
         callback(null, user);
-      } catch (error) {
-        callback(
-          error instanceof GrpcError
-            ? error
-            : new GrpcError(status.INTERNAL, (error as Error).message),
-          null
-        );
+      } catch (err) {
+        callback(toGrpcError(err), null);
       }
       return;
     },
@@ -40,12 +35,7 @@ export function userController(userService: IUserService): UserServiceHandlers {
       userService
         .findAll()
         .then((users) => callback(null, { users }))
-        .catch((err) =>
-          callback(
-            err instanceof GrpcError ? err : new GrpcError(status.INTERNAL, (err as Error).message),
-            null
-          )
-        );
+        .catch((err) => callback(toGrpcError(err), null));
     },
 
     UpdateProfile: (call, callback) => {
@@ -59,12 +49,7 @@ export function userController(userService: IUserService): UserServiceHandlers {
       userService
         .update(id, updateData)
         .then((user) => callback(null, user))
-        .catch((err) =>
-          callback(
-            err instanceof GrpcError ? err : new GrpcError(status.INTERNAL, (err as Error).message),
-            null
-          )
-        );
+        .catch((err) => callback(toGrpcError(err), null));
     },
   } as UserServiceHandlers;
 }

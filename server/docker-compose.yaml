@@ -1,0 +1,72 @@
+services:
+  # ===================================
+  user-service:
+    container_name: user-service
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile.dev
+    image: user-service-img
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./user-service/.env
+    command: >
+      sh -c "npx prisma migrate deploy &&
+             npm run dev"
+    depends_on:
+      - user-db
+
+  user-db:
+    container_name: user-db
+    image: postgres
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: userdb
+    volumes:
+      - userdb-data:/var/lib/postgresql/data
+
+  # ===================================
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile.dev
+    image: auth-service-img
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./auth-service/.env
+    command: >
+      sh -c "npx prisma migrate deploy &&
+             npm run dev"
+    depends_on:
+      - auth-db
+      - auth-cache
+
+  auth-db:
+    container_name: auth-db
+    image: postgres
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: authdb
+    volumes:
+      - authdb-data:/var/lib/postgresql/data
+
+  auth-cache:
+    container_name: auth-cache
+    image: redis:8-alpine
+    volumes:
+      - auth-cache-data:/data
+
+volumes:
+  userdb-data:
+  authdb-data:
+  auth-cache-data:

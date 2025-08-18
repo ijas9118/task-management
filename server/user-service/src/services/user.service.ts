@@ -3,6 +3,7 @@ import { User } from "@prisma/client";
 import { IUserService } from "./user.service.contract";
 
 import { UserAlreadyExistsError } from "@/errors/UserAlreadyExistsError";
+import { UserNotFoundError } from "@/errors/UserNotFoundError";
 import { IUserRepository } from "@/repositories/user.repository.contract";
 
 export default class UserService implements IUserService {
@@ -25,6 +26,10 @@ export default class UserService implements IUserService {
   }
 
   async update(id: string, data: { name: string }): Promise<User> {
+    const user = await this.userRepo.findById(id);
+    if (!user) {
+      throw new UserNotFoundError(id);
+    }
     return this.userRepo.update(id, data);
   }
 }

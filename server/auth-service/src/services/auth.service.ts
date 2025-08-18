@@ -8,6 +8,7 @@ import { IAuthService } from "./interfaces/IAuthService";
 import { config } from "@/config/config";
 import logger from "@/config/logger";
 import redisClient from "@/config/redis";
+import { userServiceClient } from "@/grpc/client/user.grpc-client";
 import { IRefreshTokenRepository } from "@/repositories/interfaces/IRefreshTokenRepository";
 import { IUserRepository } from "@/repositories/interfaces/IUserRepository";
 import { AppError } from "@/utils/app-error";
@@ -55,10 +56,22 @@ export default class AuthService implements IAuthService {
       throw new AppError("Invalid OTP", 400);
     }
 
-    await this.userRepository.createUser({ email: data.email, password: data.hashed });
+    const user = await this.userRepository.createUser({ email: data.email, password: data.hashed });
     await redisClient.del(key);
 
-    // Call User Microservice and pass data {email, name}
+    await new Promise<void>((resolve, reject) => {
+      userServiceClient.CreateUser(
+        { id: user.id, email: user.email, name: data.name },
+        (err, _res) => {
+          if (err) {
+            console.error(err);
+            return reject(err);
+          }
+          resolve();
+          return true;
+        }
+      );
+    });
 
     return true;
   };
