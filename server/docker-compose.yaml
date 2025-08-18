@@ -18,6 +18,7 @@ services:
              npm run dev"
     depends_on:
       - user-db
+      - redis-stack
 
   user-db:
     container_name: user-db
@@ -48,7 +49,7 @@ services:
              npm run dev"
     depends_on:
       - auth-db
-      - auth-cache
+      - redis-stack
 
   auth-db:
     container_name: auth-db
@@ -60,13 +61,16 @@ services:
     volumes:
       - authdb-data:/var/lib/postgresql/data
 
-  auth-cache:
-    container_name: auth-cache
-    image: redis:8-alpine
+  redis-stack:
+    container_name: redis-stack
+    image: redis/redis-stack:7.2.0-v18
+    ports:
+      - "6379:6379"
+      - "8001:8001"
     volumes:
-      - auth-cache-data:/data
+      - redis-stack-data:/data
 
 volumes:
   userdb-data:
   authdb-data:
-  auth-cache-data:
+  redis-stack-data:

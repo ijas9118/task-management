@@ -64,7 +64,7 @@ export default class AuthService implements IAuthService {
         { id: user.id, email: user.email, name: data.name },
         (err, _res) => {
           if (err) {
-            console.error(err);
+            logger.error(err);
             return reject(err);
           }
           resolve();
