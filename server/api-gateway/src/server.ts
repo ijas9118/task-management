@@ -5,7 +5,7 @@ import logger from "./config/logger";
 (async (): Promise<void> => {
   try {
     app.listen(config.port, () => {
-      logger.info(`Auth-server running on http://localhost:${config.port}`);
+      logger.info(`${config.service_name} running on http://localhost:${config.port}`);
     });
   } catch (error) {
     logger.error(error);

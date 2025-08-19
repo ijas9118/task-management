@@ -7,7 +7,7 @@ import { IAuthService } from "./interfaces/IAuthService";
 
 import { config } from "@/config/config";
 import logger from "@/config/logger";
-import redisClient from "@/config/redis";
+import redis from "@/config/redis";
 import { userServiceClient } from "@/grpc/client/user.grpc-client";
 import { IRefreshTokenRepository } from "@/repositories/interfaces/IRefreshTokenRepository";
 import { IUserRepository } from "@/repositories/interfaces/IUserRepository";
@@ -31,13 +31,13 @@ export default class AuthService implements IAuthService {
     const otp = Math.floor(1000 + Math.random() * 9000);
 
     const key = crypto.randomUUID();
-    await redisClient.hSet(`register:${key}`, {
+    await redis.hset(`register:${key}`, {
       email,
       name,
       hashed,
       otp: otp.toString(),
     });
-    await redisClient.expire(`register:${key}`, 360);
+    await redis.expire(`register:${key}`, 360);
 
     logger.debug(otp);
     logger.debug(key);
@@ -46,7 +46,7 @@ export default class AuthService implements IAuthService {
   verifyOtp = async (otp: string, registerId: string): Promise<boolean> => {
     const key = `register:${registerId}`;
 
-    const data = await redisClient.hGetAll(key);
+    const data = await redis.hgetall(key);
 
     if (!data || Object.keys(data).length === 0) {
       throw new AppError("Registration data not found or OTP expired", 400);
@@ -57,7 +57,7 @@ export default class AuthService implements IAuthService {
     }
 
     const user = await this.userRepository.createUser({ email: data.email, password: data.hashed });
-    await redisClient.del(key);
+    await redis.del(key);
 
     await new Promise<void>((resolve, reject) => {
       userServiceClient.CreateUser(

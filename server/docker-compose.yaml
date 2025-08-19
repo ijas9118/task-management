@@ -1,5 +1,4 @@
 services:
-  # ===================================
   user-service:
     container_name: user-service
     build:
@@ -17,20 +16,9 @@ services:
       sh -c "npx prisma migrate deploy &&
              npm run dev"
     depends_on:
-      - user-db
+      - postgres-db
       - redis-stack
 
-  user-db:
-    container_name: user-db
-    image: postgres
-    environment:
-      POSTGRES_DB: userdb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: userdb
-    volumes:
-      - userdb-data:/var/lib/postgresql/data
-
-  # ===================================
   auth-service:
     container_name: auth-service
     build:
@@ -48,22 +36,26 @@ services:
       sh -c "npx prisma migrate deploy &&
              npm run dev"
     depends_on:
-      - auth-db
+      - postgres-db
       - redis-stack
 
-  auth-db:
-    container_name: auth-db
+  postgres-db:
+    container_name: postgres-db
     image: postgres
+    restart: always
     environment:
-      POSTGRES_DB: authdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: authdb
+      POSTGRES_PASSWORD: mypostgresdb
     volumes:
-      - authdb-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
 
   redis-stack:
     container_name: redis-stack
     image: redis/redis-stack:7.2.0-v18
+    restart: always
     ports:
       - "6379:6379"
       - "8001:8001"
@@ -71,6 +63,5 @@ services:
       - redis-stack-data:/data
 
 volumes:
-  userdb-data:
-  authdb-data:
+  postgres-data:
   redis-stack-data:
