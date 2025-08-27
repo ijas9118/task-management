@@ -4,7 +4,6 @@ import { ProtoGrpcType } from "../proto/user";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Recreate __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 

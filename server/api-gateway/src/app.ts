@@ -3,7 +3,6 @@ import express, { Application, Request, Response } from "express";
 import helmet from "helmet";
 import { StatusCodes } from "http-status-codes";
 
-import { config } from "./config/config";
 import logger from "./config/logger";
 import { proxyServices } from "./config/services";
 import errorHandler from "./middlewares/error";
@@ -25,8 +24,6 @@ app.use((req, _res, next) => {
 app.get("/health", (req: Request, res: Response) => {
   res.status(StatusCodes.OK).json({
     message: "API-Gateway is healthy",
-    node: config.node_env,
-    service_name: config.service_name,
   });
 });
 
