@@ -8,9 +8,22 @@ dotenv.config();
 const envSchema = z.object({
   PORT: z.string().min(1, "Port is required").default("3002"),
   NODE_ENV: z.enum(["development", "production"]).default("development"),
+  DEFAULT_TIMEOUT: z.string().default("30000"),
   LOG_LEVEL: z.enum(["error", "warn", "info", "http", "verbose", "debug", "silly"]).default("info"),
   SERVICE_NAME: z.string().default(pkg.name),
   REDIS_URL: z.string().min(1, "Redis URL is required").default("redis://redis-stack:6379"),
+  RATE_LIMIT_WINDOW: z
+    .string()
+    .min(1, "Required")
+    .default((15 * 60 * 1000).toString()),
+  RATE_LIMIT_MAX_REQUESTS: z.string().min(1, "Required").default("100"),
+  AUTH_SERVICE_URL: z.string().min(1, "Auth service url required").default("http://localhost:3001"),
+  USER_SERVICE_URL: z.string().min(1, "User service url required").default("http://localhost:3002"),
+  TASK_SERVICE_URL: z.string().min(1, "Task service url required").default("http://localhost:3003"),
+  PROJECT_SERVICE_URL: z
+    .string()
+    .min(1, "Project service url required")
+    .default("http://localhost:3004"),
 });
 
 const env = envSchema.safeParse(process.env);
@@ -27,4 +40,11 @@ export const config = {
   log_level: env.data.LOG_LEVEL,
   service_name: env.data.SERVICE_NAME,
   redis_url: env.data.REDIS_URL,
+  rate_limit_window: parseInt(env.data.RATE_LIMIT_WINDOW, 10),
+  rate_limit_max_requests: parseInt(env.data.RATE_LIMIT_MAX_REQUESTS, 10),
+  auth_service_url: env.data.AUTH_SERVICE_URL,
+  user_service_url: env.data.USER_SERVICE_URL,
+  task_service_url: env.data.TASK_SERVICE_URL,
+  project_service_url: env.data.PROJECT_SERVICE_URL,
+  default_timeout: parseInt(env.data.DEFAULT_TIMEOUT, 10),
 };
