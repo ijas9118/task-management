@@ -3,7 +3,7 @@ import path from "node:path";
 import { loadPackageDefinition, Server } from "@grpc/grpc-js";
 import { loadSync } from "@grpc/proto-loader";
 
-import { UserController } from "@/controllers/user.controller";
+import { UserGRPCController } from "@/controllers/user.grpc.controller";
 import { prismaClient } from "@/lib/prisma";
 import { ProtoGrpcType } from "@/proto/user";
 import UserRepository from "@/repositories/user.repository";
@@ -16,7 +16,7 @@ const grpcObj = loadPackageDefinition(packageDef) as unknown as ProtoGrpcType;
 
 const userRepo = new UserRepository(prismaClient);
 const userService = new UserService(userRepo);
-const controller = new UserController(userService);
+const controller = new UserGRPCController(userService);
 
 const server = new Server();
 

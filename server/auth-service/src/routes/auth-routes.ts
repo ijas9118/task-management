@@ -19,4 +19,8 @@ authRouter.post("/verify-otp", authController.verifyOtp);
 
 authRouter.post("/login", authController.login);
 
+authRouter.get("/", (req, res) => {
+  res.json({ message: "hsakjfhadsjkfh" });
+});
+
 export default authRouter;

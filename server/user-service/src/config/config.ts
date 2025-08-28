@@ -7,6 +7,7 @@ dotenv.config();
 
 const envSchema = z.object({
   PORT: z.string().min(1, "Port is required").default("3002"),
+  GRPC_PORT: z.string().min(1, "gRPC Port is required").default("5002"),
   NODE_ENV: z.enum(["development", "production"]).default("development"),
 });
 
@@ -20,4 +21,5 @@ if (!env.success) {
 export const config = {
   port: env.data.PORT,
   node_env: env.data.NODE_ENV,
+  grpc_port: env.data.GRPC_PORT,
 };
