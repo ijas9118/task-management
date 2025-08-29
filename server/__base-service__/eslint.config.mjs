@@ -14,6 +14,8 @@ export default antfu(
   {
     rules: {
       "ts/no-redeclare": "off",
+      "curly": ["error", "all"],
+      "eqeqeq": "error",
       "ts/consistent-type-definitions": ["off"],
       "no-console": ["warn"],
       "antfu/no-top-level-await": ["off"],

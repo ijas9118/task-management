@@ -15,8 +15,9 @@ export class TaskRepository implements ITaskRepository {
   }
 
   async findById(id: string): Promise<ITask | null> {
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return null;
+    }
     return await taskModel.findById(id);
   }
 
@@ -25,14 +26,16 @@ export class TaskRepository implements ITaskRepository {
   }
 
   async update(id: string, data: UpdateTaskDTO): Promise<ITask | null> {
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return null;
+    }
     return await taskModel.findByIdAndUpdate(id, data, { new: true });
   }
 
   async delete(id: string): Promise<boolean> {
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return false;
+    }
     const res = await taskModel.findByIdAndDelete(id);
     return res !== null;
   }

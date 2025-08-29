@@ -9,7 +9,7 @@ import type { ITaskService } from "@/services/task.service.interface";
 import { asynHandler } from "@/utils/async-handler";
 
 export class TaskController {
-  constructor(private taskService: ITaskService) { }
+  constructor(private taskService: ITaskService) {}
 
   createTask = asynHandler(async (req: Request, res: Response) => {
     const data: CreateTaskDTO = req.body;
@@ -19,8 +19,9 @@ export class TaskController {
 
   getTask = asynHandler(async (req: Request, res: Response) => {
     const task = await this.taskService.getTask(req.params.id);
-    if (!task)
+    if (!task) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: "Task not found" });
+    }
     res.status(StatusCodes.OK).json({ message: "Task fetched", task });
   });
 
@@ -32,15 +33,17 @@ export class TaskController {
   updateTask = asynHandler(async (req: Request, res: Response) => {
     const data: UpdateTaskDTO = req.body;
     const task = await this.taskService.updateTask(req.params.id, data);
-    if (!task)
+    if (!task) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: "Task not found" });
+    }
     res.json({ message: "Task updated", task });
   });
 
   deleteTask = asynHandler(async (req: Request, res: Response) => {
     const success = await this.taskService.deleteTask(req.params.id);
-    if (!success)
+    if (!success) {
       return res.status(StatusCodes.NOT_FOUND).json({ message: "Task not found" });
+    }
     res.status(StatusCodes.OK).json({ message: "Task deleted" });
   });
 }
