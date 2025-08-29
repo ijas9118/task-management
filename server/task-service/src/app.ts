@@ -24,7 +24,7 @@ app.use((req, _res, next) => {
 
 app.get<object, MessageResponse>("/api/v1/health", (_req, res) => {
   res.status(StatusCodes.OK).json({
-    message: "Task Service is healthy",
+    message: "Task Service is healthy and running",
   });
 });
 
