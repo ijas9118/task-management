@@ -2,9 +2,15 @@ name: Task Service CI/CD
 
 on:
   push:
-    branches: [task-service]
+    paths:
+      - "server/task-service/**"
+    branches:
+      - "task-service"
   pull_request:
-    branches: [task-service]
+    paths:
+      - "server/task-service/**"
+    branches:
+      - "task-service"
 
 jobs:
   test:
