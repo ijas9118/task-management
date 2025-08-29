@@ -12,6 +12,7 @@ const envSchema = z.object({
     .enum(["error", "warn", "info", "http", "verbose", "debug", "silly"])
     .default("http"),
   SERVICE_NAME: z.string().default(pkg.name),
+  MONGO_URI: z.string().min(1, "Must be a valid MongoDB connection string"),
 });
 
 // eslint-disable-next-line node/no-process-env
@@ -33,4 +34,5 @@ export const config = {
   node_env: env.data.NODE_ENV,
   log_level: env.data.LOG_LEVEL,
   service_name: env.data.SERVICE_NAME,
+  mongo_uri: env.data.MONGO_URI,
 };

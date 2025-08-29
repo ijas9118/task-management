@@ -11,14 +11,11 @@ const envSchema = z.object({
   DEFAULT_TIMEOUT: z.string().default("30000"),
   LOG_LEVEL: z.enum(["error", "warn", "info", "http", "verbose", "debug", "silly"]).default("info"),
   SERVICE_NAME: z.string().default(pkg.name),
-  REDIS_URL: z.string().min(1, "Redis URL is required").default("redis://redis-stack:6379"),
-  AUTH_SERVICE_URL: z.string().min(1, "Auth service url required").default("http://localhost:3001"),
-  USER_SERVICE_URL: z.string().min(1, "User service url required").default("http://localhost:3002"),
-  TASK_SERVICE_URL: z.string().min(1, "Task service url required").default("http://localhost:3003"),
-  PROJECT_SERVICE_URL: z
-    .string()
-    .min(1, "Project service url required")
-    .default("http://localhost:3004"),
+  REDIS_URL: z.string().min(1, "Redis URL is required"),
+  AUTH_SERVICE_URL: z.string().min(1, "Auth service url required"),
+  USER_SERVICE_URL: z.string().min(1, "User service url required"),
+  TASK_SERVICE_URL: z.string().min(1, "Task service url required"),
+  PROJECT_SERVICE_URL: z.string().min(1, "Project service url required"),
 });
 
 const env = envSchema.safeParse(process.env);

@@ -23,6 +23,12 @@ class ServiceProxy {
       pathRewrite: { "^/api/v1/users": "/" },
       name: "user-service",
     },
+    {
+      path: "/api/v1/tasks",
+      url: config.task_service_url,
+      pathRewrite: { "^/api/v1/tasks": "/" },
+      name: "task-service",
+    },
   ];
 
   private static createProxyOptions(service: ServiceConfig): Options {

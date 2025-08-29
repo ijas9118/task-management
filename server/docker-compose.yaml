@@ -56,6 +56,24 @@ services:
       - postgres-db
       - redis-stack
 
+  task-service:
+    container_name: task-service
+    build:
+      context: ./task-service
+      dockerfile: Dockerfile.dev
+    image: task-service-img
+    volumes:
+      - ./task-service:/app
+      - /app/node_modules
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./task-service/.env
+    command: ["npm", "run", "dev"]
+    depends_on:
+      - mongo-db
+      - redis-stack
+
   postgres-db:
     container_name: postgres-db
     image: postgres
@@ -68,6 +86,18 @@ services:
       - ./init-db:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
+
+  mongo-db:
+    container_name: mongo-db
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
 
   redis-stack:
     container_name: redis-stack
@@ -83,4 +113,5 @@ services:
 
 volumes:
   postgres-data:
+  mongodb-data:
   redis-stack-data:

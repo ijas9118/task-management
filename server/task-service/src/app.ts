@@ -3,6 +3,8 @@ import express from "express";
 import helmet from "helmet";
 import { StatusCodes } from "http-status-codes";
 
+import taskRoutes from "@/routes/task.routes";
+
 import type MessageResponse from "./types/message-response";
 
 import logger from "./config/logger";
@@ -25,6 +27,8 @@ app.get<object, MessageResponse>("/api/v1/health", (_req, res) => {
     message: "Task Service is healthy",
   });
 });
+
+app.use("/api/v1", taskRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
