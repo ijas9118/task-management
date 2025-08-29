@@ -16,9 +16,6 @@ jobs:
   test:
     name: Unit Testing
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server/task-service
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,6 +28,8 @@ jobs:
 
       - name: Install Dependancies
         run: npm ci
+        working-directory: server/task-service
 
       - name: Run tests
         run: npm test || echo "No tests found, would add tests in a real project"
+        working-directory: server/task-service
