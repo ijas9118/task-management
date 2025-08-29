@@ -16,6 +16,9 @@ jobs:
   test:
     name: Unit Testing
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server/task-service
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
